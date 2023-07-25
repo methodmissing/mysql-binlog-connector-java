@@ -24,14 +24,18 @@ public class GtidEventData implements EventData {
 
     private MySqlGtid gtid;
     private byte flags;
+    private long lastCommitted;
+    private long sequenceNumber;
 
     @Deprecated
     public GtidEventData() {
     }
 
-    public GtidEventData(MySqlGtid gtid, byte flags) {
+    public GtidEventData(MySqlGtid gtid, byte flags, long lastCommitted, long sequenceNumber) {
         this.gtid = gtid;
         this.flags = flags;
+        this.lastCommitted = lastCommitted;
+        this.sequenceNumber = sequenceNumber;
     }
 
     @Deprecated
@@ -57,10 +61,18 @@ public class GtidEventData implements EventData {
         this.flags = flags;
     }
 
+    public long getLastCommitted() {
+        return lastCommitted;
+    }
+
+    public long getSequenceNumber() {
+        return sequenceNumber;
+    }
+
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("GtidEventData");
-        sb.append("{flags=").append(flags).append(", gtid='").append(gtid).append('\'');
+        sb.append("{flags=").append(flags).append(", gtid='").append(gtid).append('\'').append(", last_committed='").append(lastCommitted).append('\'').append(", sequence_number='").append(sequenceNumber).append('\'');
         sb.append('}');
         return sb.toString();
     }

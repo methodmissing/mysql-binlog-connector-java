@@ -33,12 +33,24 @@ public class GtidEventDataDeserializer implements EventDataDeserializer<GtidEven
         long sourceIdLeastSignificantBits = readLongBigEndian(inputStream);
         long transactionId = inputStream.readLong(8);
 
+        long lastCommitted = 0;
+        long sequenceNumber = 0;
+        if (inputStream.getPosition() >= 23) {
+          if (inputStream.peek() == 2) {
+            inputStream.skip(1);
+            lastCommitted = inputStream.readLong(8);
+            sequenceNumber = inputStream.readLong(8);
+          }
+        }
+
         return new GtidEventData(
             new MySqlGtid(
                 new UUID(sourceIdMostSignificantBits, sourceIdLeastSignificantBits),
                 transactionId
             ),
-            flags
+            flags,
+            lastCommitted,
+            sequenceNumber
         );
     }
 
